@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stack>
 using namespace std;
 
 typedef struct IntList {
@@ -6,6 +7,8 @@ typedef struct IntList {
     IntList *next;
 } IntList;
 
+stack<std::string> revStack;
+IntList *tempNode;
 void addFront(IntList **head)
 {
     int n;
@@ -104,6 +107,32 @@ void searchList(IntList *head)
     cout << "\nElement Not found. \n";
 }
 
+IntList *recLinkListReversal(IntList *head, int k)
+{
+    IntList *prev = NULL, *next = NULL, *temp = head;
+    int count = 1;
+    while ((count <= k) && (temp))
+    {
+        next = temp->next;
+        temp->next = prev;
+        prev = temp;
+        count++;
+        temp = next;
+    }
+    if (next)
+        head->next = recLinkListReversal(next, k);
+
+    return prev;
+}
+void kWidthListReversal(IntList **head)
+{
+    int k;
+    cout << "\nEnter k bucket size to reverse in slots of k : ";
+    cin >> k;
+    *head = recLinkListReversal(*head, k);
+}
+
+
 void printList(IntList *head)
 {
     cout << "Printing List ... ";
@@ -119,7 +148,7 @@ int main() {
     int choice;
     while (1)
     {
-        cout << "\nEnter your Choice (1 - 6) := \n 1. Add to front \n 2. Add to back \n 3. Delete from Front \n 4. Delete from back \n 5. Search if element is present \n 6. Exit. \n \n";
+        cout << "\nEnter your Choice (1 - 7) := \n 1. Add to front \n 2. Add to back \n 3. Delete from Front \n 4. Delete from back \n 5. Search if element is present \n 6. Reverse in k chunks \n 7. Exit. \n \n";
         cin >> choice;
         switch (choice)
         {
@@ -144,6 +173,10 @@ int main() {
                 printList(l1);
                 break;
             case 6:
+                kWidthListReversal(&l1);
+                printList(l1);
+                break;
+            case 7:
                 printList(l1);
                 exit(1);
                 break;
