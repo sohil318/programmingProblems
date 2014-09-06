@@ -205,6 +205,8 @@ void kthElementListSwap(IntList **head)
     //cout << "\nFront = \t" << front->val << "\tBack = \t" << back->val;
 }
 
+/****  Merge two Linked Lists ****/
+
 void mergeLinkedListSorted(IntList **head)
 {
     int n, i, j, k;
@@ -281,6 +283,153 @@ void mergeLinkedListSorted(IntList **head)
     *head = l3;
 }
 
+/****  Add two Linked Lists ****/
+
+IntList* add (IntList *h1, IntList *h2, int *carry)
+{
+    int sum;
+    IntList *l3;
+    if ((h1->next == NULL) && (h2->next == NULL))
+    {
+        IntList *temp = new IntList;
+        sum = h1->val + h2->val + *carry;
+        *carry = sum/10;
+        temp->val = sum%10;
+        temp->next = NULL;
+        return temp;
+    }
+    else 
+    {
+        l3 = add(h1->next, h2->next, carry);
+        IntList *temp = new IntList;
+        sum = h1->val + h2->val + *carry;
+        *carry = sum/10;
+        temp->val = sum%10;
+        temp->next = l3;
+        l3 = temp;
+        return l3;
+    }
+}
+
+IntList* addCarryToSubList(IntList *h1, int *carry)
+{
+    int sum;
+    IntList *l3;
+    if (h1->next == NULL)
+    {
+        IntList *temp = new IntList;
+        sum = h1->val + *carry;
+        *carry = sum/10;
+        temp->val = sum%10;
+        temp->next = NULL;
+        return temp;
+    }
+    else 
+    {
+        l3 = addCarryToSubList(h1->next, carry);
+        IntList *temp = new IntList;
+        sum = h1->val + *carry;
+        *carry = sum/10;
+        temp->val = sum%10;
+        temp->next = l3;
+        l3 = temp;
+        return l3;
+    }
+}
+
+void addLinkedList(IntList **head)
+{
+    int n, i, j, k, carry = 0, count = 0, diff = 0;
+    IntList *sum, *subListHead = NULL, *subList;
+    cout << "\nEnter size of 2nd List : ";
+    cin >> n;
+    IntList *l2 = NULL, *prev, *h3, *h2 = NULL;
+    IntList *l1 = *head;
+    IntList *l3 = NULL;
+
+    for (i = 0; i < n; i++)
+    {
+        cout << "\nEnter Number for 2nd List : ";
+        if ( i == 0 )
+        {
+            IntList *temp = new IntList;
+            cin >> temp->val;
+            temp->next = NULL;
+            l2 = temp;
+            h2 = temp;
+            continue;
+        }
+        IntList *temp = new IntList;
+        cin >> temp->val;
+        temp->next = NULL;
+        l2->next = temp;
+        l2 = l2->next;
+    } 
+    while (l1)
+    {
+        count++;
+        l1 = l1->next;
+    }
+    l1 = *head;
+    l2 = h2;
+    diff = count - n;
+    
+    if (diff > 0)
+    {
+        subListHead = l1;
+        subList = l1;
+        for ( i = 1; i < diff; i++)
+        {
+            subList = subList->next;
+        }
+        l1 = subList->next;
+        subList->next = NULL;
+    }
+    else if (diff < 0)
+    {
+        subListHead = l2;
+        subList = l2;
+        for ( i = 1; i < -diff; i++)
+        {
+            subList = subList->next;
+        }
+        l2 = subList->next;
+        subList->next = NULL;
+    }
+     
+    if (count * n)
+        sum = add(l1, l2, &carry);
+    if (subListHead)
+        subListHead = addCarryToSubList(subListHead, &carry);
+    if (carry)
+    {
+        IntList *temp = new IntList;
+        temp->val = 1;
+        if (subListHead)
+        {
+            temp->next = subListHead;
+            subListHead = temp;
+        }
+        else
+        {
+            temp->next = sum;
+            sum = temp;
+        }
+    }
+    cout << "\nSum of 2 linked list = ";
+    while (subListHead)
+    {
+        cout << "\t" << subListHead->val;
+        subListHead = subListHead->next;
+    }
+    while (sum)
+    {
+        cout << "\t" << sum->val;
+        sum = sum->next;
+    }
+    cout << endl;
+    
+}
 
 void printList(IntList *head)
 {
@@ -297,7 +446,7 @@ int main() {
     int choice;
     while (1)
     {
-        cout << "\nEnter your Choice (1 - 9) := \n 1. Add to front \n 2. Add to back \n 3. Delete from Front \n 4. Delete from back \n 5. Search if element is present \n 6. Reverse in k chunks \n 7. Swap kth element \n 8. Merge 2 Sorted Linked List. \n 9. Exit. \n \n";
+        cout << "\nEnter your Choice (1 - 9) := \n 1. Add to front \n 2. Add to back \n 3. Delete from Front \n 4. Delete from back \n 5. Search if element is present \n 6. Reverse in k chunks \n 7. Swap kth element \n 8. Merge 2 Sorted Linked List. \n 9. Add 2 Linked List \n 10. Exit. \n \n";
         cin >> choice;
         switch (choice)
         {
@@ -334,6 +483,10 @@ int main() {
                 printList(l1);
                 break;
             case 9:
+                addLinkedList(&l1);
+                printList(l1);
+                break;
+            case 10:
                 printList(l1);
                 exit(1);
                 break;
