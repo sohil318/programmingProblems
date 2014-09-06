@@ -131,6 +131,9 @@ void kWidthListReversal(IntList **head)
     *head = recLinkListReversal(*head, k);
 }
 
+
+/*  SWAP kth element from the beginning with kth element from the end of a linked list. */
+
 void kthElementListSwap(IntList **head)
 {
     int k, count = 0, i;
@@ -202,6 +205,82 @@ void kthElementListSwap(IntList **head)
     //cout << "\nFront = \t" << front->val << "\tBack = \t" << back->val;
 }
 
+void mergeLinkedListSorted(IntList **head)
+{
+    int n, i, j, k;
+    cout << "\nEnter size of 2nd List : ";
+    cin >> n;
+    IntList *l2 = NULL, *prev, *h3, *h2;
+    IntList *l1 = *head;
+    IntList *l3 = NULL;
+
+    for (i = 0; i < n; i++)
+    {
+        cout << "\nEnter Number for 2nd List : ";
+        if ( i == 0 )
+        {
+            IntList *temp = new IntList;
+            cin >> temp->val;
+            temp->next = NULL;
+            l2 = temp;
+            h2 = temp;
+            continue;
+        }
+        IntList *temp = new IntList;
+        cin >> temp->val;
+        temp->next = NULL;
+        l2->next = temp;
+        l2 = l2->next;
+    }
+    l2 = h2;
+    while ((l1) && (l2))
+    {
+        if (l1->val < l2->val)
+        {
+            if (l3)
+            {
+                l3->next = l1;
+                l3 = l3->next;
+            }
+            else
+            {
+                h3 = l1;
+                l3 = h3;
+            }
+            l1 = l1->next;
+            l3->next = NULL;
+        }
+        else
+        {
+            if (l3)
+            {
+                l3->next = l2;
+                l3 = l3->next;
+            }
+            else
+            {
+                h3 = l2;
+                l3 = h3;
+            }
+            l2 = l2->next;
+            l3->next = NULL;
+        }
+    }
+    if (l1)
+        l3->next = l1;
+    if (l2)
+        l3->next = l2;
+    cout << "\nMerged LinkedList : ";
+    l3 = h3;
+    while (h3)
+    {
+        cout << "\t" << h3->val;
+        h3 = h3->next;
+    }
+    cout << endl;
+    *head = l3;
+}
+
 
 void printList(IntList *head)
 {
@@ -218,7 +297,7 @@ int main() {
     int choice;
     while (1)
     {
-        cout << "\nEnter your Choice (1 - 8) := \n 1. Add to front \n 2. Add to back \n 3. Delete from Front \n 4. Delete from back \n 5. Search if element is present \n 6. Reverse in k chunks \n 7. Swap kth element \n 8. Exit. \n \n";
+        cout << "\nEnter your Choice (1 - 9) := \n 1. Add to front \n 2. Add to back \n 3. Delete from Front \n 4. Delete from back \n 5. Search if element is present \n 6. Reverse in k chunks \n 7. Swap kth element \n 8. Merge 2 Sorted Linked List. \n 9. Exit. \n \n";
         cin >> choice;
         switch (choice)
         {
@@ -251,6 +330,10 @@ int main() {
                 printList(l1);
                 break;
             case 8:
+                mergeLinkedListSorted(&l1);
+                printList(l1);
+                break;
+            case 9:
                 printList(l1);
                 exit(1);
                 break;
