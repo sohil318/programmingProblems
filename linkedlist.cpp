@@ -7,8 +7,6 @@ typedef struct IntList {
     IntList *next;
 } IntList;
 
-stack<std::string> revStack;
-IntList *tempNode;
 void addFront(IntList **head)
 {
     int n;
@@ -124,12 +122,84 @@ IntList *recLinkListReversal(IntList *head, int k)
 
     return prev;
 }
+
 void kWidthListReversal(IntList **head)
 {
     int k;
     cout << "\nEnter k bucket size to reverse in slots of k : ";
     cin >> k;
     *head = recLinkListReversal(*head, k);
+}
+
+void kthElementListSwap(IntList **head)
+{
+    int k, count = 0, i;
+    IntList *temp = *head, *front, *back, *prevBack, *prevFront, *nextBack, *nextFront;
+    cout << "\nEnter k bucket size to reverse in slots of k : ";
+    cin >> k;
+    while (temp)
+    {
+        count++;
+        temp = temp->next;
+    }
+    //cout << "Total Elements : " << count;
+    if (k > count)
+    {
+        cout << "\nLinked List size is smaller than K.\n";
+        return;
+    }
+    else if ((k == (count+1)/2) && (count%2 == 1))
+    {
+        cout << "\nkth Element is same from both ends hence they are swapped.\n";
+        return;
+    }
+    else if (k > count/2)
+    {
+        k = count + 1 - k;
+    }
+    i = 1;
+    front = *head;
+    while (i < count - k + 1)
+    {
+        prevFront = front;
+        front = front->next;
+        nextFront = front->next;
+        if ((i == k-1) and (k > 1))
+        {
+            prevBack = prevFront;
+            back = front;
+            nextBack = nextFront;
+        }
+        else if (k==1)
+        {
+            prevBack = NULL;
+            back = *head;
+            nextBack = (*head)->next;
+        }
+        i++;
+    }
+    //cout << "\nprevFront :" << prevFront->val << "nextFront : " << nextFront->val; 
+    //cout << "\nprevBack :" << prevBack->val << "nextBack : " << nextBack->val; 
+    if (back->next == front)
+    {
+        front->next = back;
+        if (prevBack)
+            prevBack->next = front;
+        else
+            *head = front;
+        back->next = nextFront;
+    }
+    else
+    {
+        prevFront->next = back;
+        back->next = nextFront;
+        if (prevBack)
+            prevBack->next = front;
+        else
+            *head = front;
+        front->next = nextBack;
+    }
+    //cout << "\nFront = \t" << front->val << "\tBack = \t" << back->val;
 }
 
 
@@ -148,7 +218,7 @@ int main() {
     int choice;
     while (1)
     {
-        cout << "\nEnter your Choice (1 - 7) := \n 1. Add to front \n 2. Add to back \n 3. Delete from Front \n 4. Delete from back \n 5. Search if element is present \n 6. Reverse in k chunks \n 7. Exit. \n \n";
+        cout << "\nEnter your Choice (1 - 8) := \n 1. Add to front \n 2. Add to back \n 3. Delete from Front \n 4. Delete from back \n 5. Search if element is present \n 6. Reverse in k chunks \n 7. Swap kth element \n 8. Exit. \n \n";
         cin >> choice;
         switch (choice)
         {
@@ -177,6 +247,10 @@ int main() {
                 printList(l1);
                 break;
             case 7:
+                kthElementListSwap(&l1);
+                printList(l1);
+                break;
+            case 8:
                 printList(l1);
                 exit(1);
                 break;
