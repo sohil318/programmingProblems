@@ -13,6 +13,7 @@ class Graph
     public:
     Graph(int n);
     void createGraph();
+    void nodeVisitReset();
     void addEdge(int start, int end);
     void BFS(int start);
     void DFS(int start);
@@ -23,7 +24,7 @@ Graph::Graph(int n)
     this->nodes = n;
     this->adj = new list<int>[n];
     for (int i = 0; i < n; i++)
-        visited.push_back(false);
+        this->visited.push_back(false);
 }
 
 void Graph::addEdge(int start, int end)
@@ -66,7 +67,7 @@ void Graph::BFS(int start)
 
 void Graph::DFS(int start)
 {
-    //cout << "\n DFS Tree Traversal : \t";
+    
     this->visited[start] = true;
 
     cout << "\t" << start;
@@ -76,11 +77,21 @@ void Graph::DFS(int start)
             this->DFS(*iter);
     }
 }
+
+void Graph::nodeVisitReset()
+{
+    for (int i = 0; i < this->nodes; i++)
+        this->visited[i] = false;
+}
+
 int main()
 {
     Graph *g = new Graph(5);
     g->createGraph();
-    //g->BFS(2);
+    g->BFS(2);
+    g->nodeVisitReset();
+    cout << "\n DFS Tree Traversal : \t";
     g->DFS(2);
+    cout << endl;
     return 1;
 }
