@@ -1,5 +1,5 @@
 #include <iostream>
-#include <stack>
+#include <queue>
 using namespace std;
 
 typedef struct Node {
@@ -67,6 +67,89 @@ void postOrderTraversal(Node* root)
     return;
 }
 
+void printNodesAtEachLevel(Node *root, int level, int direction)
+{
+    if (level == 0)
+    {
+        cout << "\t" << root->val;
+        return;
+    }
+    if (direction % 2 == 0)
+    {
+        if (root->leftChild)
+            printNodesAtEachLevel(root->leftChild, level-1, direction);
+        if (root->rightChild)
+            printNodesAtEachLevel(root->rightChild, level-1, direction);
+    }
+    else
+    {
+        if (root->rightChild)
+            printNodesAtEachLevel(root->rightChild, level-1, direction);
+        if (root->leftChild)
+            printNodesAtEachLevel(root->leftChild, level-1, direction);
+
+    }
+    return;
+}
+
+int getBTHeight(Node* root, int level)
+{
+    static int height = 0;
+    if ((root->leftChild == NULL) && (root->rightChild == NULL))
+    {    if (level > height)
+            height = level;
+        return height;
+    }
+    if (root->leftChild)
+    getBTHeight(root->leftChild, level + 1);
+    if (root->rightChild)
+    getBTHeight(root->rightChild, level + 1);
+    return height;
+}
+
+void levelOrderTraversalRecursion(Node* root)
+{
+    int height = getBTHeight(root, 0);
+    for (int i = 0; i <= height; i++)
+    {
+        cout << endl;
+        printNodesAtEachLevel(root, i, i);
+    }
+}
+
+void levelOrderTraversal(Node* root)
+{
+    queue<Node *> qe;
+    Node *temp = newNode(-1);
+    Node *front;
+
+    if (root)
+    {
+        qe.push(root);
+        qe.push(temp);
+    }
+    while(qe.size())
+    {
+        front = qe.front();
+        if (front->val == -1)
+        {
+            cout << endl;
+            qe.push(temp);
+            if (qe.size() == 2)
+                break;
+        }
+        else
+        {
+            cout << "\t" << front->val;
+            if (front->leftChild)
+                qe.push(front->leftChild);    
+            if (front->rightChild)
+                qe.push(front->rightChild);
+        }
+        qe.pop();
+    }
+}
+
 int nodesCount(Node* root)
 {
     if (!root)
@@ -79,13 +162,22 @@ int nodesCount(Node* root)
 
 int main()
 {
+    
     Node *root = createTree();
+    cout << "\nInOrder Traversal : \n";
     inOrderTraversal(root);
     cout << endl;
+    cout << "\nPreOrder Traversal : \n";
     preOrderTraversal(root);
     cout << endl;
+    cout << "\nPostOrder Traversal : \n";
     postOrderTraversal(root);
     cout << endl;
-    cout << nodesCount(root);
-    return 1;
+    cout << "\nLevelOrder Traversal : \n";
+    levelOrderTraversal(root);
+    cout << "\nLevelOrder Traversal Recursion : \n";
+    levelOrderTraversalRecursion(root);
+    cout << endl << "\nNo of Nodes : \t" << nodesCount(root) << endl;
+    return 0;
+
 }
