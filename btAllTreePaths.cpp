@@ -74,7 +74,5 @@ int main()
     inOrderTraversal(root);
     cout << "\nAll Paths : \n" << endl;
     allLeafPaths(root, path);
-    
-
     return 1;
 }
