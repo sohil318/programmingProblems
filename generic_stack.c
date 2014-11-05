@@ -80,5 +80,22 @@ int main(int argc, char *argv[])
     pop(&s, &num);
     printf("Element that is popped : %d\n", num);
 
+    stack s1;
+    float x = 1.0;
+    initStack(&s1, sizeof(float), 3);
+    push(&s1, &x);
+    x += 1.0;
+    push(&s1, &x);
+    x += 1.0;
+    push(&s1, &x);
+    
+    //printElems(&s);
+   
+    float n;
+    pop(&s1, &n);
+    printf("Element that is popped : %f\n", n);
+
+    pop(&s1, &n);
+    printf("Element that is popped : %f\n", n);
     return 0;
 }
